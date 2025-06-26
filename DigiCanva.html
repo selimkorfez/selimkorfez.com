@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigiCanva - Selim Korfez</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background particles */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #64b5f6;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(100, 181, 246, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #64b5f6;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 20px #64b5f6;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .back-button:hover {
+            background: rgba(100, 181, 246, 0.1);
+            border-color: #64b5f6;
+            color: #64b5f6;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        /* Project Header */
+        .project-header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(100, 181, 246, 0.2);
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #64b5f6, #ffffff, #90caf9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #b0bec5;
+            margin-bottom: 2rem;
+        }
+
+        .project-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #1976d2, #64b5f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+        }
+
+        .project-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(25, 118, 210, 0.5);
+        }
+
+        .project-link.secondary {
+            background: linear-gradient(45deg, #424242, #616161);
+            border: 1px solid #64b5f6;
+        }
+
+        .project-link.secondary:hover {
+            background: linear-gradient(45deg, #616161, #757575);
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #64b5f6;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(45deg, #1976d2, #64b5f6);
+        }
+
+        .section-content {
+            color: #b0bec5;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-content ul {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.5rem;
+            color: #90a4ae;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            border-color: #64b5f6;
+            box-shadow: 0 10px 30px rgba(100, 181, 246, 0.2);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #1976d2, #64b5f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .gallery-caption {
+            padding: 1rem;
+            color: #b0bec5;
+            font-size: 0.9rem;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-tag {
+            background: rgba(100, 181, 246, 0.2);
+            color: #64b5f6;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background: rgba(100, 181, 246, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Challenges Section */
+        .challenge-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(100, 181, 246, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .challenge-item:hover {
+            border-color: #64b5f6;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .challenge-title {
+            color: #64b5f6;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .challenge-description {
+            color: #90a4ae;
+        }
+
+        /* Results/Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            border-radius: 15px;
+            padding: 2rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: #64b5f6;
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #64b5f6;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: #b0bec5;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 10, 0.9);
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(100, 181, 246, 0.3);
+            margin-top: 5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .main-content {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .project-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">SK</a>
+            <a href="index.html#projects" class="back-button">
+                ← Back to Portfolio
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="project-header fade-in">
+            <h1 class="project-title">DigiCanva (I am still working on this page 🛠️)</h1>
+            <p class="project-subtitle">Full-stack modern e-commerce solution with advanced features</p>
+            <div class="project-links">
+                <a href="https://github.com/your-username/ecommerce-repo" class="project-link">
+                    🔗 View on GitHub
+                </a>
+                <a href="#" class="project-link secondary">
+                    🚀 Live Demo
+                </a>
+            </div>
+        </div>
+
+        <div class="content-section fade-in">
+            <h2 class="section-title">Project Overview</h2>
+            <div class="section-content">
+                <p>This full-stack e-commerce platform represents a modern approach to online retail, combining cutting-edge web technologies with user-centric design principles. The platform supports multiple vendors, advanced product management, secure payment processing, and comprehensive analytics.</p>
+                
+                <p>Built with scalability in mind, the system can handle thousands of concurrent users while maintaining optimal performance. The platform includes features like real-time inventory management, personalized recommendations, and multi-currency support to cater to a global audience.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Technologies Used</h2>
+            <div class="tech-stack">
+                <span class="tech-tag">Next.js</span>
+                <span class="tech-tag">TypeScript</span>
+                <span class="tech-tag">Node.js</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">Prisma ORM</span>
+                <span class="tech-tag">Stripe API</span>
+                <span class="tech-tag">Redis</span>
+                <span class="tech-tag">AWS S3</span>
+                <span class="tech-tag">Tailwind CSS</span>
+                <span class="tech-tag">Docker</span>
+                <span class="tech-tag">Elasticsearch</span>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Project Screenshots</h2>
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        Homepage & Product Catalog
+                    </div>
+                    <div class="gallery-caption">
+                        Modern homepage with featured products, categories, and advanced search functionality
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        Product Details Page
+                    </div>
+                    <div class="gallery-caption">
+                        Comprehensive product view with image gallery, reviews, and recommendation engine
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        Shopping Cart & Checkout
+                    </div>
+                    <div class="gallery-caption">
+                        Streamlined checkout process with multiple payment options and security features
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        Admin Dashboard
+                    </div>
+                    <div class="gallery-caption">
+                        Comprehensive admin panel for inventory, orders, analytics, and user management
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Key Features</h2>
+            <div class="section-content">
+                <ul>
+                    <li><strong>Advanced Product Management:</strong> Multi-variant products with dynamic pricing and inventory tracking</li>
+                    <li><strong>Secure Payment Processing:</strong> Integration with Stripe for credit cards, PayPal, and digital wallets</li>
+                    <li><strong>Intelligent Search:</strong> Elasticsearch-powered search with filters, sorting, and autocomplete</li>
+                    <li><strong>User Account System:</strong> Customer profiles, order history, wishlists, and address management</li>
+                    <li><strong>Real-time Analytics:</strong> Sales tracking, customer behavior analysis, and performance metrics</li>
+                    <li><strong>Mobile Responsive:</strong> Progressive Web App (PWA) with offline capabilities</li>
+                    <li><strong>Multi-vendor Support:</strong> Marketplace functionality with vendor dashboards and commission tracking</li>
+                    <li><strong>Review System:</strong> Customer reviews and ratings with moderation capabilities</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Implementation Process</h2>
+            <div class="section-content">
+                <p><strong>Phase 1: Market Research & Planning (Week 1-2)</strong></p>
+                <p>Conducted thorough market analysis of existing e-commerce platforms. Defined user personas, created user stories, and designed the system architecture. Established database schema and API specifications.</p>
+
+                <p><strong>Phase 2: Backend Development (Week 3-7)</strong></p>
+                <p>Built RESTful APIs using Node.js and Express. Implemented PostgreSQL database with Prisma ORM for type-safe database operations. Added authentication, authorization, and payment processing capabilities.</p>
+
+                <p><strong>Phase 3: Frontend Development (Week 8-12)</strong></p>
+                <p>Created responsive UI using Next.js and Tailwind CSS. Implemented dynamic product catalogs, shopping cart functionality, and user account management. Added real-time features and search capabilities.</p>
+
+                <p><strong>Phase 4: Testing & Deployment (Week 13-14)</strong></p>
+                <p>Comprehensive testing including unit tests, integration tests, and load testing. Deployed using Docker containers with CI/CD pipeline. Implemented monitoring and error tracking systems.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Challenges & Solutions</h2>
+            <div class="challenge-item">
+                <div class="challenge-title">Challenge: Payment Security & PCI Compliance</div>
+                <div class="challenge-description">
+                    Ensuring secure payment processing while maintaining PCI compliance standards. Implemented Stripe's secure payment processing with tokenization and never storing sensitive card data on our servers.
+                </div>
+            </div>
+            <div class="challenge-item">
+                <div class="challenge-title">Challenge: Inventory Management at Scale</div>
+                <div class="challenge-description">
+                    Managing real-time inventory across multiple warehouses and handling concurrent transactions. Created a sophisticated inventory system with Redis caching and database locks to prevent overselling.
+                </div>
+            </div>
+            <div class="challenge-item">
+                <div class="challenge-title">Challenge: Search Performance</div>
+                <div class="challenge-description">
+                    Providing fast, relevant search results across thousands of products. Integrated Elasticsearch with custom scoring algorithms and implemented autocomplete with typo tolerance and synonym support.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Results & Impact</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-number">65%</div>
+                    <div class="metric-label">Conversion Rate Improvement</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">2.1s</div>
+                    <div class="metric-label">Average Page Load Time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">10K+</div>
+                    <div class="metric-label">Products Managed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">99.8%</div>
+                    <div class="metric-label">Payment Success Rate</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <p>The platform has successfully processed over $500K in transactions during its first quarter. Customer satisfaction scores average 4.7/5, with particular praise for the intuitive interface and fast checkout process. The system handles peak traffic loads of 1000+ concurrent users without performance degradation.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Future Enhancements</h2>
+            <div class="section-content">
+                <ul>
+                    <li>AI-powered personalization engine for product recommendations</li>
+                    <li>Advanced analytics dashboard with machine learning insights</li>
+                    <li>Mobile app development for iOS and Android platforms</li>
+                    <li>Integration with social media platforms for social commerce</li>
+                    <li>Augmented reality features for product visualization</li>
+                    <li>Multi-language and multi-currency expansion</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p style="color: #90a4ae;">&copy; 2025 Selim Korfez. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Animated background particles
+        function createParticles() {
+            const bgAnimation = document.getElementById('bgAnimation');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                bgAnimation.appendChild(particle);
+            }
+        }
+
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', createParticles);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.content-section, .gallery-item, .challenge-item, .metric-card');
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>

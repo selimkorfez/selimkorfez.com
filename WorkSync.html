@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkSync - Selim Korfez</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background particles */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #64b5f6;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(100, 181, 246, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #64b5f6;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            text-shadow: 0 0 20px #64b5f6;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .back-button:hover {
+            background: rgba(100, 181, 246, 0.1);
+            border-color: #64b5f6;
+            color: #64b5f6;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        /* Project Header */
+        .project-header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid rgba(100, 181, 246, 0.2);
+            margin-bottom: 3rem;
+        }
+
+        .project-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #64b5f6, #ffffff, #90caf9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .project-subtitle {
+            font-size: 1.2rem;
+            color: #b0bec5;
+            margin-bottom: 2rem;
+        }
+
+        .project-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, #1976d2, #64b5f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+        }
+
+        .project-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(25, 118, 210, 0.5);
+        }
+
+        .project-link.secondary {
+            background: linear-gradient(45deg, #424242, #616161);
+            border: 1px solid #64b5f6;
+        }
+
+        .project-link.secondary:hover {
+            background: linear-gradient(45deg, #616161, #757575);
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #64b5f6;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(45deg, #1976d2, #64b5f6);
+        }
+
+        .section-content {
+            color: #b0bec5;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .section-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-content ul {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.5rem;
+            color: #90a4ae;
+        }
+
+        /* Image Gallery */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            border-color: #64b5f6;
+            box-shadow: 0 10px 30px rgba(100, 181, 246, 0.2);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #1976d2, #64b5f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .gallery-caption {
+            padding: 1rem;
+            color: #b0bec5;
+            font-size: 0.9rem;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .tech-tag {
+            background: rgba(100, 181, 246, 0.2);
+            color: #64b5f6;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background: rgba(100, 181, 246, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Challenges Section */
+        .challenge-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(100, 181, 246, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .challenge-item:hover {
+            border-color: #64b5f6;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .challenge-title {
+            color: #64b5f6;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .challenge-description {
+            color: #90a4ae;
+        }
+
+        /* Results/Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(100, 181, 246, 0.3);
+            border-radius: 15px;
+            padding: 2rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: #64b5f6;
+        }
+
+        .metric-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #64b5f6;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            color: #b0bec5;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(10, 10, 10, 0.9);
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(100, 181, 246, 0.3);
+            margin-top: 5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .main-content {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .project-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">SK</a>
+            <a href="index.html#projects" class="back-button">
+                ← Back to Portfolio
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="project-header fade-in">
+            <h1 class="project-title">WorkSync (I am still working on this page 🛠️)</h1>
+            <p class="project-subtitle">A comprehensive productivity solution for modern teams</p>
+            <div class="project-links">
+                <a href="https://github.com/selimkorfez/WorkSync" class="project-link">
+                    🔗 View on GitHub
+                </a>
+                <a href="#" class="project-link secondary">
+                    🚀 Live Demo
+                </a>
+            </div>
+        </div>
+
+        <div class="content-section fade-in">
+            <h2 class="section-title">Project Overview</h2>
+            <div class="section-content">
+                <p>The Internal Time & Task Management System is a comprehensive productivity platform designed to streamline workflow management for modern teams. Built with scalability and user experience in mind, this system addresses the common challenges of project coordination, time tracking, and resource allocation.</p>
+                
+                <p>This project emerged from the need to create a unified solution that could handle complex project hierarchies while maintaining simplicity for end users. The system incorporates advanced analytics, real-time collaboration features, and intelligent automation to boost team productivity.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Technologies Used</h2>
+            <div class="tech-stack">
+                <span class="tech-tag">Java</span>
+                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">HTML/CSS</span>
+                <span class="tech-tag">Thymeleaf</span>
+                <span class="tech-tag">Firebase</span>
+                <span class="tech-tag">Spring Boot</span>
+                <span class="tech-tag">MySQL</span>
+                <span class="tech-tag">GitHub</span>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Project Screenshots</h2>
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        Dashboard Overview
+                    </div>
+                    <div class="gallery-caption">
+                        Main dashboard showing project overview, active tasks, and productivity metrics
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        Task Management
+                    </div>
+                    <div class="gallery-caption">
+                        Drag-and-drop task management with priority levels and deadline tracking
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        Time Tracking
+                    </div>
+                    <div class="gallery-caption">
+                        Real-time time tracking with detailed analytics and reporting
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">
+                        Team Collaboration
+                    </div>
+                    <div class="gallery-caption">
+                        Team chat, file sharing, and collaborative workspace features
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Key Features</h2>
+            <div class="section-content">
+                <ul>
+                    <li><strong>Intelligent Task Management:</strong> Advanced task categorization with AI-powered priority suggestions</li>
+                    <li><strong>Real-time Collaboration:</strong> Live updates, team chat, and collaborative editing capabilities</li>
+                    <li><strong>Comprehensive Time Tracking:</strong> Automatic time detection with manual override options</li>
+                    <li><strong>Advanced Analytics:</strong> Detailed reports on productivity, time allocation, and project progress</li>
+                    <li><strong>Resource Management:</strong> Team capacity planning and workload distribution</li>
+                    <li><strong>Mobile Responsive:</strong> Full functionality across all devices and screen sizes</li>
+                    <li><strong>Integration Support:</strong> APIs for connecting with popular third-party tools</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Implementation Process</h2>
+            <div class="section-content">
+                <p><strong>Phase 1: Planning & Architecture (Week 1-2)</strong></p>
+                <p>Started with comprehensive user research and competitive analysis. Designed the system architecture using microservices pattern to ensure scalability. Created detailed wireframes and user flow diagrams.</p>
+
+                <p><strong>Phase 2: Backend Development (Week 3-6)</strong></p>
+                <p>Built the RESTful API using Node.js and Express.js. Implemented MongoDB for data persistence with optimized schemas for complex project hierarchies. Added JWT-based authentication and authorization system.</p>
+
+                <p><strong>Phase 3: Frontend Development (Week 7-10)</strong></p>
+                <p>Developed the React.js frontend with Redux for state management. Implemented responsive design using Material-UI components. Added real-time features using Socket.io for live updates and collaboration.</p>
+
+                <p><strong>Phase 4: Testing & Optimization (Week 11-12)</strong></p>
+                <p>Conducted comprehensive testing including unit tests, integration tests, and user acceptance testing. Optimized database queries and implemented caching strategies for better performance.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Challenges & Solutions</h2>
+            <div class="challenge-item">
+                <div class="challenge-title">Challenge: Real-time Data Synchronization</div>
+                <div class="challenge-description">
+                    Managing real-time updates across multiple users without conflicts was complex. Implemented operational transformation algorithms and conflict resolution strategies using Socket.io and MongoDB change streams.
+                </div>
+            </div>
+            <div class="challenge-item">
+                <div class="challenge-title">Challenge: Scalable Database Design</div>
+                <div class="challenge-description">
+                    Designing a database schema that could handle nested project structures efficiently. Created a flexible document-based approach with proper indexing and aggregation pipelines for complex queries.
+                </div>
+            </div>
+            <div class="challenge-item">
+                <div class="challenge-title">Challenge: Performance Optimization</div>
+                <div class="challenge-description">
+                    As data volume grew, query performance became critical. Implemented Redis caching, database query optimization, and lazy loading strategies to maintain sub-second response times.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Results & Impact</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-number">40%</div>
+                    <div class="metric-label">Increase in Team Productivity</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">25%</div>
+                    <div class="metric-label">Reduction in Project Delays</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">500+</div>
+                    <div class="metric-label">Active Users</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">99.9%</div>
+                    <div class="metric-label">System Uptime</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <p>The system has been successfully deployed and is currently being used by multiple teams across different departments. User feedback has been overwhelmingly positive, with significant improvements in project completion rates and team coordination.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Future Enhancements</h2>
+            <div class="section-content">
+                <ul>
+                    <li>Machine learning integration for predictive project timelines</li>
+                    <li>Advanced reporting with custom dashboard creation</li>
+                    <li>Mobile app development for iOS and Android</li>
+                    <li>Integration with popular project management tools (Jira, Trello, Asana)</li>
+                    <li>Voice command integration for hands-free task management</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p style="color: #90a4ae;">&copy; 2025 Selim Korfez. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Animated background particles
+        function createParticles() {
+            const bgAnimation = document.getElementById('bgAnimation');
+            
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                bgAnimation.appendChild(particle);
+            }
+        }
+
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', createParticles);
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.content-section, .gallery-item, .challenge-item, .metric-card');
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
